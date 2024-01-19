@@ -38,7 +38,7 @@ jobs:
         docker run -d \
         --name server \
         --network host \
-        --health-cmd='wget --quiet --tries=1 --spider http://localhost:8080 || exit 1' \
+        --health-cmd='wget --quiet --tries=1 --spider http://0.0.0.0:8080 || exit 1' \
         --health-interval=10s \
         --health-timeout=5s \
         --health-retries=3 \
