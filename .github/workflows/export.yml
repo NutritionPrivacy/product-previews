@@ -35,7 +35,7 @@ jobs:
 
     - name: Start Server
       run: |
-        docker container start nutritionprivacy/backend:main -d
+        docker run -d nutritionprivacy/backend:main
 
     - name: Download JSON
       run: |
