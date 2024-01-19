@@ -35,7 +35,18 @@ jobs:
 
     - name: Start Server
       run: |
-        docker run -d nutritionprivacy/backend:main
+        docker run -d --name server \
+        --health-cmd='wget --quiet --tries=1 --spider http://localhost:8080 || exit 1' \
+        --health-interval=10s \
+        --health-timeout=5s \
+        --health-retries=3 \
+        nutritionprivacy/backend:main
+    
+    - name: Wait for server
+      run: |
+        until [ "$(docker inspect --format='{{.State.Health.Status}}' server)" == "healthy" ]; do
+          sleep 1;
+        done
 
     - name: Download JSON
       run: |
