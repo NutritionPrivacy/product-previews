@@ -39,7 +39,7 @@ jobs:
 
     - name: Download JSON
       run: |
-        wget 127.0.0.1:8080/export/previews/de -O nutritionprivacy_de.json
+        wget localhost:8080/export/previews/de -O nutritionprivacy_de.json
 
     - name: Convert JSON to JSONL
       run: |
