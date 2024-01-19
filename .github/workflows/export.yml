@@ -1,0 +1,48 @@
+name: Product Preview Export
+
+on: push
+
+jobs:
+  process-dump:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Download PostgreSQL Dump
+      run: |
+        wget --header="cache-bypass-auth: ${{ secrets.CACHE_BYPASS_AUTH }}" db.nutritionprivacy.de/database.tar -O database.tar
+    
+    - name: Extract PostgreSQL Dump
+      run: tar -xvf database.tar
+
+    - name: Import PostgreSQL Dump
+      run: |
+        cat dump.sql | PGPASSWORD=vapor_password psql -h localhost -U vapor_username -d vapor_database
+
+    - name: Start Server
+      run: |
+        docker container start nutritionprivacy/backend:main -d
+
+    - name: Download JSON
+      run: |
+        wget 127.0.0.1:8080/export/previews/de -O nutritionprivacy_de.json
+
+    - name: Convert JSON to JSONL
+      run: |
+        jq -c '.[]' nutritionprivacy_de.json > nutritionprivacy_de.jsonl
+
