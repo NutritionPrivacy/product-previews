@@ -3,7 +3,7 @@ name: Product Preview Export
 on: push
 
 jobs:
-  process-dump:
+  export:
     runs-on: ubuntu-latest
 
     services:
