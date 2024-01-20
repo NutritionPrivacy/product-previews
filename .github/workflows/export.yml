@@ -1,6 +1,9 @@
 name: Product Preview Export
 
-on: push
+on:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+  workflow_dispatch:
 
 jobs:
   export:
@@ -27,11 +30,25 @@ jobs:
       run: |
         cat restore.sql | docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database
 
-    - name: Download JSON
+    - name: Download Nutrition Privacy JSON
       run: |
         wget 0.0.0.0:8080/export/previews/de -O nutritionprivacy_de.json
 
-    - name: Convert JSON to JSONL
+    - name: Convert Nutrition Privacy JSON to JSONL
       run: |
-        jq -c '.[]' nutritionprivacy_de.json > nutritionprivacy_de.jsonl
+        jq -c '.[]' nutritionprivacy_de.json > nutritionprivacy-products.jsonl
+    
+    - name: Download OpenFoodFacts JSONL
+      run: | 
+        curl -o - https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz -f | gunzip > ./openfoodfacts-products.jsonl
+    
+    - name: Create Product Preview JSON files
+      run: |
+        mkdir public
+        swift run ProductPreviews
+    
+    - name: Update nightly release
+      run: gh release upload nightly public/* --clobber
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
