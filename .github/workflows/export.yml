@@ -6,21 +6,15 @@ jobs:
   export:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: vapor_database        
-          POSTGRES_PASSWORD: vapor_password
-          POSTGRES_USER: vapor_username
-        ports:
-          - 5432:5432
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         submodules: true
+    - name: Start Local Server
+      run: |
+        docker-compose -f ci/docker-compose.ci.yml up -d
+        bash ci/healthcheck.sh
 
     - name: Download PostgreSQL Dump
       run: |
@@ -31,28 +25,11 @@ jobs:
 
     - name: Import PostgreSQL Dump
       run: |
-        cat dump.sql | PGPASSWORD=vapor_password psql -h localhost -U vapor_username -d vapor_database
-
-    - name: Start Server
-      run: |
-        docker run -d \
-        --name server \
-        --network host \
-        --health-cmd='wget --quiet --tries=1 --spider http://0.0.0.0:8080 || exit 1' \
-        --health-interval=10s \
-        --health-timeout=5s \
-        --health-retries=3 \
-        nutritionprivacy/backend:main
-    
-    - name: Wait for server
-      run: |
-        until [ "$(docker inspect --format='{{.State.Health.Status}}' server)" == "healthy" ]; do
-          sleep 1;
-        done
+        cat database/restore.sql | | docker exec -i nutritionprivacy_db PGPASSWORD=vapor_password psql -h localhost -U vapor_username -d vapor_database
 
     - name: Download JSON
       run: |
-        wget localhost:8080/export/previews/de -O nutritionprivacy_de.json
+        wget 0.0.0.0:8080/export/previews/de -O nutritionprivacy_de.json
 
     - name: Convert JSON to JSONL
       run: |
