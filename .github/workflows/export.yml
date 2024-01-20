@@ -25,7 +25,7 @@ jobs:
 
     - name: Import PostgreSQL Dump
       run: |
-        cat database/restore.sql | docker exec -i nutritionprivacy_db PGPASSWORD=vapor_password psql -h localhost -U vapor_username -d vapor_database
+        cat restore.sql | docker exec -i nutritionprivacy_db PGPASSWORD=vapor_password psql -h localhost -U vapor_username -d vapor_database
 
     - name: Download JSON
       run: |
