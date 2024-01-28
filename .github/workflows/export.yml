@@ -30,17 +30,14 @@ jobs:
 
     - name: Download PostgreSQL Dump
       run: |
-        wget --header="cache-bypass-auth: ${{ secrets.CACHE_BYPASS_AUTH }}" db.nutritionprivacy.de/database.tar -O database.tar
-    
-    - name: Extract PostgreSQL Dump
-      run: tar -xvf database.tar
+        wget --header="cache-bypass-auth: ${{ secrets.CACHE_BYPASS_AUTH }}" db.nutritionprivacy.de/database.sql -O database.sql
 
     - name: Import PostgreSQL Dump
       run: |
         docker stop nutritionprivacy
         docker exec -e PGPASSWORD=vapor_password nutritionprivacy_db psql -U vapor_username -d postgres -c "DROP DATABASE IF EXISTS vapor_database;"
         docker exec -e PGPASSWORD=vapor_password nutritionprivacy_db psql -U vapor_username -d postgres -c "CREATE DATABASE vapor_database;"
-        cat restore.sql | docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database
+        cat database.sql | docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database
         docker start nutritionprivacy
 
     - name: Download Nutrition Privacy JSON
