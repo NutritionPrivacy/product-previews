@@ -38,6 +38,7 @@ jobs:
     - name: Import PostgreSQL Dump
       run: |
         docker stop nutritionprivacy
+        docker exec -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -c "DROP DATABASE IF EXISTS vapor_database;"
         cat restore.sql | docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database
         docker start nutritionprivacy
 
