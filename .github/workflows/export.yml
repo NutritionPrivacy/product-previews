@@ -43,6 +43,10 @@ jobs:
       run: |
         wget 0.0.0.0:8080/export/previews/de -O nutritionprivacy_de.json
 
+    - name: Output JSON file content
+      run: cat nutritionprivacy_de.json
+
+
     - name: Convert Nutrition Privacy JSON to JSONL
       run: |
         jq -c '.[]' nutritionprivacy_de.json > nutritionprivacy-products.jsonl
