@@ -37,7 +37,9 @@ jobs:
 
     - name: Import PostgreSQL Dump
       run: |
+        docker stop nutritionprivacy
         cat restore.sql | docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database
+        docker start nutritionprivacy
 
     - name: Download Nutrition Privacy JSON
       run: |
