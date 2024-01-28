@@ -25,6 +25,7 @@ jobs:
         submodules: true
     - name: Start Local Server
       run: |
+        mkdir ./ci/database_dump/
         docker-compose -f ci/docker-compose.ci.yml up -d
         ./ci/healthcheck.sh
 
