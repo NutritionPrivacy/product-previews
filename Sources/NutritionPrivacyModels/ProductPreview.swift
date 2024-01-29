@@ -13,6 +13,8 @@ public struct ProductPreview: SmallProductConvertable, Decodable {
         var result: [Core.Language: String] = [:]
         if let german = underlyingProductPreview.names.first(where: { $0.languageCode == "de" }), let value = german.value {
             result[.german] = value
+        } else if let german = underlyingProductPreview.names.first(where: { $0.languageCode == "de_CH" }), let value = german.value {
+            result[.german] = value
         }
         if let english = underlyingProductPreview.names.first(where: { $0.languageCode == "en" }), let value = english.value {
             result[.english] = value

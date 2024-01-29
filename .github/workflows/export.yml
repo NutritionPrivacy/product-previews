@@ -44,7 +44,7 @@ jobs:
 
     - name: Download Nutrition Privacy JSON
       run: |
-        wget 0.0.0.0:8080/export/previews/de -O nutritionprivacy_de.json
+        wget 0.0.0.0:8080/export/previews/de_CH -O nutritionprivacy_de.json
 
     - name: Output JSON file content
       run: cat nutritionprivacy_de.json
