@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SmallProduct: Codable {
+public struct SmallProduct: Codable, Equatable {
 	public let name: String
 	public let brand: String?
 	public let barcode: String
