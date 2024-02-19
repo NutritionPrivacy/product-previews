@@ -114,4 +114,14 @@ extension Product: SmallProductConvertable {
 	public func getServing() -> String? {
 		servingSize?.rawValue
 	}
+    
+    public func getProductMeasurement() -> ProductMeasurement {
+        if let quantity {
+            return quantity.unit.productMeasurement
+        }
+        if let servingSize {
+            return servingSize.unit.productMeasurement
+        }
+        return  .unknown
+    }
 }

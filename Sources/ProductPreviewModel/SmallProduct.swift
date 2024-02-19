@@ -5,17 +5,15 @@ public struct SmallProduct: Codable {
 	public let brand: String?
 	public let barcode: String
 	public let energy: Int
-	public let quantity: Quantity?
-	public let serving: String?
+    public let measurement: ProductMeasurement
 	public let source: DataSource
 	
-	public init(name: String, brand: String?, barcode: String, energy: Int, quantity: Quantity?, serving: String?, source: DataSource) {
-		self.name = name
-		self.brand = brand
-		self.barcode = barcode
-		self.energy = energy
-		self.quantity = quantity
-		self.serving = serving
-		self.source = source
-	}
+    public init(name: String, brand: String?, barcode: String, energy: Int, measurement: ProductMeasurement, source: DataSource) {
+        self.name = name
+        self.brand = brand
+        self.barcode = barcode
+        self.energy = energy
+        self.measurement = measurement
+        self.source = source
+    }
 }

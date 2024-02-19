@@ -24,6 +24,10 @@ let package = Package(
             dependencies: ["ProductPreviewModel"]
         ),
         .target(name: "ProductPreviewModel"),
+        .testTarget(
+            name: "ProductPreviewModelTests",
+            dependencies: ["ProductPreviewModel"]
+        ),
         .target(
             name: "OpenFoodFactsModels",
             dependencies: [

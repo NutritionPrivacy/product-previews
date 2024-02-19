@@ -8,4 +8,5 @@ public protocol SmallProductConvertable {
 	func getEnergy() -> Int
 	func getQuantity() -> Quantity?
 	func getServing() -> String?
+    func getProductMeasurement() -> ProductMeasurement
 }

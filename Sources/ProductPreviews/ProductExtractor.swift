@@ -32,9 +32,8 @@ struct ProductExtractor<T: SmallProductConvertable & Decodable> {
 					let smallProduct = SmallProduct(name: name,
 													brand: product.getBrand(),
 													barcode: product.getId(),
-													energy: product.getEnergy(),
-                                                    quantity: product.getQuantity(),
-													serving: product.getServing(),
+                                                    energy: product.getEnergy(),
+                                                    measurement: product.getProductMeasurement(),
 													source: dataSource)
 					let fileWriter = fileWriters[language]
 					try fileWriter?.writeLine(data: try encoder.encode(smallProduct))

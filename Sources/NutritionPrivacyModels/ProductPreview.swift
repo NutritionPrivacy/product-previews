@@ -41,6 +41,13 @@ public struct ProductPreview: SmallProductConvertable, Decodable {
     public func getServing() -> String? {
         nil
     }
+    
+    public func getProductMeasurement() -> ProductMeasurement {
+        if let previewQuentity = underlyingProductPreview.totalQuantity?.previewQuantity {
+            return previewQuentity.unit.productMeasurement
+        }
+        return .unknown
+    }
 }
 
 extension Components.Schemas.Quantity {
