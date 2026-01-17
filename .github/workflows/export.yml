@@ -56,7 +56,7 @@ jobs:
     
     - name: Download OpenFoodFacts JSONL
       run: | 
-        curl -o - https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz -f | gunzip > ./openfoodfacts-products.jsonl
+        curl -L --fail --progress-bar https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz | gunzip > openfoodfacts-products.jsonl
     
     - name: Create Product Preview JSON files
       run: |
