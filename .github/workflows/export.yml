@@ -20,39 +20,9 @@ jobs:
         remove-haskell: 'true'
         
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         submodules: true
-    - name: Start Local Server
-      run: |
-        mkdir ./ci/database_dump/
-        docker compose -f ci/docker-compose.ci.yml up -d
-        ./ci/healthcheck.sh
-
-    - name: Download PostgreSQL Dump
-      run: |
-        wget --header="cache-bypass-auth: ${{ secrets.CACHE_BYPASS_AUTH }}" db.nutritionprivacy.de/database.sql -O ./ci/database_dump/database.sql
-
-    - name: Import PostgreSQL Dump
-      run: |
-        docker stop nutritionprivacy
-        docker exec -e PGPASSWORD=vapor_password nutritionprivacy_db psql -U vapor_username -d postgres -c "DROP DATABASE IF EXISTS vapor_database;"
-        docker exec -e PGPASSWORD=vapor_password nutritionprivacy_db psql -U vapor_username -d postgres -c "CREATE DATABASE vapor_database;"
-        docker exec -i -e PGPASSWORD=vapor_password nutritionprivacy_db psql -h localhost -U vapor_username -d vapor_database -f ./database_dump/database.sql
-        docker compose -f ci/docker-compose.ci.yml up -d
-        ./ci/healthcheck.sh
-
-    - name: Download Nutrition Privacy JSON
-      run: |
-        wget 0.0.0.0:8080/export/previews/de_CH -O nutritionprivacy_de.json
-
-    - name: Output JSON file content
-      run: cat nutritionprivacy_de.json
-
-
-    - name: Convert Nutrition Privacy JSON to JSONL
-      run: |
-        jq -c '.[]' nutritionprivacy_de.json > nutritionprivacy-products.jsonl
     
     - name: Download OpenFoodFacts JSONL
       run: | 
